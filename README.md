@@ -9,7 +9,7 @@ To install the project, clone the repository and run the following command:
 `npm install`
 
 ### Modify Schema
-The schema file is located in `prisma/schema.prisma`. You can modify it to fit your needs. 
+The schema file is located in `prisma/schema.prisma`. modify if needed. 
 
 To mirgate change to Database, using following command:
 
@@ -21,16 +21,16 @@ To start the server, run the following command:
 
 `npm start`
 
-The server will listen on port 3000 by default. You can change the port by setting the PORT environment variable.
+The server will listen on port 3000 by default. Change the port by setting the PORT environment variable.
 
 Usage
 To use the API, send HTTP requests to the following endpoints:
 
-- api/v1/jobs: Get all jobs
-- api/v1/jobs/:id: Get a specific job
-- api/v1/jobs: Create a new job
-- api/v1/jobs/:id: Update a specific job
-- api/v1/jobs/:id: Delete a specific job
+- `GET` api/v1/job/jobs?[param]: Get all jobs
+- `GET` api/v1/job/:id: Get a specific job
+- `POST` api/v1/job/new: Create a new job
+- `PUT` api/v1/job/:id: Update a specific job
+- `DELETE` api/v1/job/:id: Delete a specific job
 
 The API returns JSON responses.
 
@@ -62,13 +62,11 @@ The response will be a JSON array of all the jobs in the database:
 To create a new job, send a POST request to the `http://localhost:3000/api/v1/job/new` endpoint with the job data in the request body:
 
 ```json 
-curl -X POST \
-  -H "Content-Type: application/json" \
-  -d '{
+  {
     "title": "Frontend Engineer",
     "description": "We are looking for a talented Frontend Engineer to join our team.",
     "expiryDate": "2023-11-30"
-  }' \
+  }
 ```
 The response will be the newly created job:
 
@@ -81,4 +79,17 @@ The response will be the newly created job:
 }
 ```
 
-You can use the other endpoints in a similar way to perform CRUD operations on jobs.
+# ENV Template:
+```JSON
+PORT = 3000
+API_URL = "/api/v1"
+# This was inserted by `prisma init`:
+# Environment variables declared in this file are automatically made available to Prisma.
+# See the documentation for more detail: https://pris.ly/d/prisma-schema#accessing-environment-variables-from-the-schema
+
+# Prisma supports the native connection string format for PostgreSQL, MySQL, SQLite, SQL Server, MongoDB and CockroachDB.
+# See the documentation for all the connection string options: https://pris.ly/d/connection-strings
+
+DATABASE_URL="postgres://{username}:{password}@localhost:5432/{db_name}"
+# SHADOW_DATABASE_URL= "postgres://{username}:{password}@localhost:5432/{db_name}"
+```
