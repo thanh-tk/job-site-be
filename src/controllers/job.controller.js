@@ -1,9 +1,11 @@
 import prisma  from "../config/db.js";
 
-//
 async function getJobList(req, res) {
   // Get the `page` query parameter
   const page = req.query["page"];
+
+  // Get the `sort` query parameter
+  const sort = req.query["sort"];
 
   // Parse the `page` query parameter into a number
   const pageNumber = parseInt(page["number"]) || 1;
@@ -11,8 +13,6 @@ async function getJobList(req, res) {
   // Parse the `pageSize` query parameter into a number
   const pageSize = parseInt(page["size"]) || 10;
 
-  // Get the `sort` query parameter
-  const sort = req.query["sort"];
 
   // Query the database for jobs, limited by the `pageSize` and `pageNumber` parameters
   // and sorted by the `sort` parameter, if provided.
@@ -42,15 +42,15 @@ async function createJob(req, res) {
   const Jobdata = req.body;
 
   // Use the Prisma client to create a new job with the provided data
-  // try {
+  try {
   const job = await prisma.job.create({ data: Jobdata });
 
   // Send the new job data as a JSON response
   res.status(200).json(job);
-  // } catch (e) {
-  //   // Respond with the created job as a JSON object
-  //   res.status(500).json({ error: e });
-  // }
+  } catch (e) {
+    // Respond with the created job as a JSON object
+    res.status(500).json({ error: e });
+  }
 }
 
 // Retrieve a single job from the database
