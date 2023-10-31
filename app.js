@@ -1,7 +1,7 @@
 const { PORT, API_URL } = process.env;
 
 import express, { json } from "express";
-import { prisma } from "./src/config/db.js"
+import prisma from "./src/config/db.js"
 import JobRouter  from "./src/routes/job.route.js";
 
 // Define the port, defaulting to 3000 if PORT is not defined
