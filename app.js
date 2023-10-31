@@ -3,6 +3,7 @@ const { PORT, API_URL } = process.env;
 import express, { json } from "express";
 import prisma from "./src/config/db.js"
 import JobRouter  from "./src/routes/job.route.js";
+import appRouter from "./src/routes/index.js";
 
 // Define the port, defaulting to 3000 if PORT is not defined
 const port = PORT || "3000";
@@ -14,8 +15,8 @@ async function main() {
   // express.json() middleware is used to parse JSON requests.
   app.use(express.json());
 
-  // Register the JobRouter at the /job endpoint
-  app.use(API_URL + "/job", JobRouter);
+  // Register the App router to default endpoint
+  app.use(API_URL, appRouter);
 
   // Catch unregistered routes
   app.all("*", (req, res) => {
