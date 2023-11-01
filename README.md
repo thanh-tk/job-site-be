@@ -15,11 +15,14 @@ To mirgate change to Database, using following command:
 
 `npm run db:migrate`
 
+To update Prisma Schema config, run:
+`npx prisma generate`
+
 ### Starting the server
 
 To start the server, run the following command:
 
-`npm start`
+`npm run start`
 
 The server will listen on port 3000 by default. Change the port by setting the PORT environment variable.
 
