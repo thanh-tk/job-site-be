@@ -1,6 +1,7 @@
 const { PORT, API_URL } = process.env;
 
 import express, { json } from "express";
+import cors from "cors";
 import prisma from "./src/config/db.js"
 import JobRouter  from "./src/routes/job.route.js";
 import appRouter from "./src/routes/index.js";
@@ -14,6 +15,14 @@ const app = express();
 async function main() {
   // express.json() middleware is used to parse JSON requests.
   app.use(express.json());
+  app.use(
+    cors({
+      origin: "*", // Allow requests from all origins
+      methods: ["GET", "POST", "PUT", "DELETE"], // Allow all HTTP methods
+      headers: ["Content-Type", "Authorization"], // Allow all headers
+    })
+  );
+
 
   // Register the App router to default endpoint
   app.use(API_URL, appRouter);
