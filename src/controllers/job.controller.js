@@ -45,7 +45,7 @@ async function getJobList(req, res) {
     // Return the jobs to the client
     return res.json(reData);
   } catch (e) {
-    res.status(500).json({ error: e });
+    res.status(500).json({ error:  e.toString() });
   }
 }
 
@@ -64,7 +64,7 @@ async function createJob(req, res) {
     res.status(200).json(job);
   } catch (e) {
     // Respond with the created job as a JSON object
-    res.status(500).json({ error: e });
+    res.status(500).json({ error:  e.toString() });
   }
 }
 
@@ -85,7 +85,7 @@ async function getJob(req, res) {
     res.status(200).json(job);
   } catch (e) {
     // If an error occurs, send an error response
-    res.status(500).json({ error: e });
+    res.status(500).json({ error:  e.toString() });
   }
 }
 
@@ -108,28 +108,29 @@ async function updateJob(req, res) {
     res.status(200).json(updatedJob);
   } catch (e) {
     // handle error by returning it with 500 status
-    res.status(500).json({ error: e });
+    res.status(500).json({ error:  e.toString() });
   }
 }
 
-// Route handler to delete a blog post
+// Route handler to delete a job
 async function deleteJob(req, res) {
   try {
-    // Get post ID from request parameters
+    // Get job ID from request parameters
     const { id } = req.params;
 
-    // Delete post using Prisma client
-    const deletedBlogPost = await prisma.post.delete({
+    // Delete job using Prisma client
+    const deletedJob = await prisma.job.delete({
       where: {
-        id: Number(id),
+        id: id,
       },
     });
 
-    // Return deleted post with 200 status code
-    res.status(200).json(deletedBlogPost);
+    // Return deleted job with 200 status code
+    res.status(200).json(deletedJob);
   } catch (e) {
+    
     // Handle error and return 500 status code
-    res.status(500).json({ error: e });
+    res.status(500).json({ error:  e.toString() });
   }
 }
 export default {
