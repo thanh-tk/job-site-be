@@ -1,39 +1,52 @@
-import prisma  from "../config/db.js";
+import prisma from "../config/db.js";
 
 async function getJobList(req, res) {
-  // Get the `page` query parameter
-  const page = req.query["page"];
+  try {
+    // Get the `page` query parameter
+    const page = req.query["page"];
 
-  // Get the `sort` query parameter
-  const sort = req.query["sort"];
+    // Get the `sort` query parameter
+    const sort = req.query["sort"];
 
-  // Parse the `page` query parameter into a number
-  const pageNumber = parseInt(page["number"]) || 1;
+    // Parse the `page` query parameter into a number
+    const pageNumber = parseInt(page["number"]) || 1;
 
-  // Parse the `pageSize` query parameter into a number
-  const pageSize = parseInt(page["size"]) || 10;
+    // Parse the `pageSize` query parameter into a number
+    const pageSize = parseInt(page["size"]) || 10;
+
+    // Query the database for jobs, limited by the `pageSize` and `pageNumber` parameters
+    // and sorted by the `sort` parameter, if provided.
+    const query = {
+      where: {},
+      take: pageSize,
+      skip: (pageNumber - 1) * pageSize,
+      orderBy: sort
+        ? {
+            // If a `sort` parameter is provided, order the results by the specified column
+            // in the specified direction.
+            [sort["col"] || "createdAt"]: sort["dir"] || "asc",
+          }
+        : {
+            // If a `sort` parameter is not provided, order the results by the `createdAt`
+            // column in descending order.
+            createdAt: "desc",
+          },
+    };
+    const [jobs, count] = await prisma.$transaction([
+      prisma.job.findMany(query),
+      prisma.job.count({ where: query.where }),
+    ]);
 
 
-  // Query the database for jobs, limited by the `pageSize` and `pageNumber` parameters
-  // and sorted by the `sort` parameter, if provided.
-  const jobs = await prisma.job.findMany({
-    take: pageSize,
-    skip: (pageNumber - 1) * pageSize,
-    orderBy: sort
-      ? {
-          // If a `sort` parameter is provided, order the results by the specified column
-          // in the specified direction.
-          [sort["col"] || "createdAt"]: sort["dir"] || "asc",
-        }
-      : {
-          // If a `sort` parameter is not provided, order the results by the `createdAt`
-          // column in descending order.
-          createdAt: "desc",
-        },
-  });
-
-  // Return the jobs to the client
-  res.json(jobs);
+    const reData = {
+      totalPage: count,
+      dataList: [...jobs],
+    };
+    // Return the jobs to the client
+    return res.json(reData);
+  } catch (e) {
+    res.status(500).json({ error: e });
+  }
 }
 
 // Function to create a new job
@@ -43,10 +56,10 @@ async function createJob(req, res) {
 
   // Use the Prisma client to create a new job with the provided data
   try {
-  const job = await prisma.job.create({ data: Jobdata });
+    const job = await prisma.job.create({ data: Jobdata });
 
-  // Send the new job data as a JSON response
-  res.status(200).json(job);
+    // Send the new job data as a JSON response
+    res.status(200).json(job);
   } catch (e) {
     // Respond with the created job as a JSON object
     res.status(500).json({ error: e });
