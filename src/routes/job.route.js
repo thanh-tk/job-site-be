@@ -13,7 +13,7 @@ JobRouter.post("/new", JobController.createJob);
 JobRouter.get("/:id", JobController.getJob);
 
 // Route to update a job by ID
-JobRouter.put("/:id/edit", JobController.updateJob);
+JobRouter.put("/:id", JobController.updateJob);
 
 // Route to delete a job by ID
 JobRouter.delete("/:id", JobController.deleteJob);

@@ -42,6 +42,8 @@ async function createJob(req, res) {
   const Jobdata = req.body;
 
   // Use the Prisma client to create a new job with the provided data
+  const company = await prisma.company.findMany({where:{}});
+  Jobdata["companyId"] = company[0].id
   try {
   const job = await prisma.job.create({ data: Jobdata });
 
