@@ -1,12 +1,41 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = env("DATABASE_URL") //
+  // shadowDatabaseUrl = env("SHADOW_DATABASE_URL") //Cloud base DB 
+
+}
+
+//Models
+model Job {
+  id String @id @default(dbgenerated("gen_random_uuid()"))  @db.Uuid
+
+  title       String
+  description String
+  expiryDate  DateTime @map("expiry_date")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  companyId String @db.Uuid @map("company_id")
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  
+  @@map("jobs")
+}
+
+model Company {
+  id String @id @default(dbgenerated("gen_random_uuid()"))  @db.Uuid
+
+  name String
+
+  Job Job[]
+  
+  @@map("companies")
 }
